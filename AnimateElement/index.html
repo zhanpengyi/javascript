@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animate an element to the right</title>
+  <style>
+    .wrapper { display: block; width: 540px; height: 240px; border: 1px solid #ccc; padding: 20px; }
+    #target { display: block; width: 200px; height: 200px; background-color:burlywood; position:relative; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div id="target"></div>
+  </div>
+  <br/>
+  <button id="right">Right By setInterval</button>
+  <button id="right-2">Right By requestAnimationFrame</button>
+  <script>
+
+    const animateRight = (e,duration,length) => {
+      let start = Date.now();
+      let timer = setInterval(()=>{
+        let now = Date.now();
+        if (now - start > duration) {
+          clearInterval(timer);
+          return;
+        }
+        e.style.left = (now - start)*length/1000 + "px";
+        e.style.left = (now - start)*length/1000 + "px";
+        e.style.left = (now - start)*length/1000 + "px";
+      },20);  // 1000ms / 10 = 100; 100FPS
+    }
+
+    const animate2 = (element, duration, length) => {
+      let start = performance.now();
+      requestAnimationFrame(function draw(time){
+        let progress = (time - start)/duration;
+        if (progress > 1) progress = 1;
+        element.style.transform = "translateX(" + progress*length + "px)";
+        if (time - start < duration) {
+          requestAnimationFrame(draw);
+        }
+      })     
+    }
+
+    const t = document.getElementById('target');
+    const btn = document.getElementById('right');
+    const btn2 = document.getElementById('right-2');
+
+    btn.addEventListener('click',function(){
+      animateRight(t,1000,240);
+    });
+
+    btn2.addEventListener('click',function(){
+      animate2(t,1000,240);
+    });    
+
+  </script>
+</body>
+</html>
