@@ -7,15 +7,29 @@
   <style>
     .wrapper { display: block; width: 540px; height: 240px; border: 1px solid #ccc; padding: 20px; }
     #target { display: block; width: 200px; height: 200px; background-color:burlywood; position:relative; }
+    #target:hover { transform: translateX(300px); transition: transform 3s linear; }
   </style>
 </head>
 <body>
+  <pre><code>
+    let count = 0;
+    <strong>requestAnimationFrame</strong>(function draw(time){
+      count++;
+      console.log(time);
+      if (count < 10) requestAnimationFrame(draw);
+    })
+  </code></pre>  
   <div class="wrapper">
     <div id="target"></div>
   </div>
   <br/>
-  <button id="right">Right By setInterval</button>
-  <button id="right-2">Right By requestAnimationFrame</button>
+  <div>
+    <button id="right">Right By setInterval</button>
+    <button id="right-2">Right By requestAnimationFrame</button>
+  </div>
+  <br/>
+  <div><a href="https://javascript.info/js-animation">Reference</a></div>
+  <div><a href="/">Back to Home</a></div>
   <script>
 
     const animateRight = (e,duration,length) => {
@@ -26,9 +40,9 @@
           clearInterval(timer);
           return;
         }
-        e.style.left = (now - start)*length/1000 + "px";
-        e.style.left = (now - start)*length/1000 + "px";
-        e.style.left = (now - start)*length/1000 + "px";
+        let progress = (now - start)/duration;
+        if (progress > 1) progress = 1;       
+        e.style.transform = "translateX(" + progress*length + "px)";
       },20);  // 1000ms / 10 = 100; 100FPS
     }
 
@@ -49,11 +63,11 @@
     const btn2 = document.getElementById('right-2');
 
     btn.addEventListener('click',function(){
-      animateRight(t,1000,240);
+      animateRight(t,3000,300);
     });
 
     btn2.addEventListener('click',function(){
-      animate2(t,1000,240);
+      animate2(t,3000,300);
     });    
 
   </script>
