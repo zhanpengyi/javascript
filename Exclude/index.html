@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exclude</title>
+</head>
+<body>
+  
+</body>
+  <script>
+
+    const items = [
+      { color: 'red', type:'tv', age:'18' },
+      { color: 'silver', type:'phone', age:'20' },
+      { color: 'silver', type:'tv', age:'20' },
+      { color: 'green', type:'phone', age:'19' },
+      { color: 'blue', type:'tv', age:'18' }
+    ];
+
+    const excludes = [
+      {k:'color',v:'silver'},
+      {k:'color',v:'blue'},
+      {k:'type', v:'tv'}
+    ];
+
+    // time complexity N^M   N = number of items and M = number of  excludes
+    // n to the power of M
+    function excludeItems(items,excludes) {
+      excludes.forEach(pair => {
+        items = items.filter(item => item[pair.k] !== pair.v);
+      });
+      return items;
+    }
+
+    function mapExcludes(excludes) {
+      let result = new Map();
+      excludes.forEach(x => {
+        if (result.has(x.k)) {
+          const temp = result.get(x.k);
+          temp.push(x.v);
+          result.set(x.k,temp);
+        }
+        else {
+          result.set(x.k,[x.v])
+        }
+      });
+      return result;
+    }
+
+    const mapedExcludes = mapExcludes(excludes);
+
+    function excludeItems2(items,mapedExcludes) {
+      let result = [];
+      result = items.filter(item => {
+        let include = true;
+        mapedExcludes.forEach((v,k)=>{
+          if (v.indexOf(item[k])!==-1) include = false;
+        })
+        return include;
+      });
+      return result;
+    }
+
+    // const mapedExcludes =  {
+    //   color: [silver, blue],
+    //   type: [tv] 
+    // }
+
+    const myExcludes = excludeItems(items,excludes);
+    const myExcludes2 = excludeItems2(items,mapedExcludes);
+    console.log("This is the original: ",myExcludes);
+    console.log("This is the optimize: ",myExcludes2);
+
+  </script>
+</html>
