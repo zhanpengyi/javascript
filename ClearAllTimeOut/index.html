@@ -6,6 +6,10 @@
   <title>Clear All Time Out</title>
 </head>
 <body>
+  <div>
+    <a href="https://obscurejavascript.tumblr.com/post/183031058225/how-to-clear-all-timeouts-in-javascript">Reference</a>
+  </div>
+  
   <script>
     let allTimeoutIds = [];
     let originalTimeout = window.setTimeout;
@@ -13,7 +17,6 @@
       const id = originalTimeout(callback,time);
       allTimeoutIds.push(id);
     }
-
     function clearAll(arr) {
       const a = [...arr];
       while(a.length) {

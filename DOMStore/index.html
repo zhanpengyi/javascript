@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Store, Symbols</title>
+</head>
+<body>
+
+  <div class="node">This is a node</div>
+
+  <div class="node">This is a node</div>
+
+  <script>
+    const nodes = document.querySelectorAll('.node');
+    console.log(nodes);
+    const nodeA = nodes[0];
+    const nodeB = nodes[1];
+
+    // use map. take the node element as the key to save value in the map container.
+    // use Symbol to create a unique id. Set the node object a new property use that id as proerty name
+    class DOMstore {
+      constructor() {
+        this.container = new Map();
+      }
+      set(node,value) {
+        this.container.set(node,value);
+      }
+      get(node) {
+        if (this.container.has(node)) return this.container.get(node);
+        else return null;
+      }
+      has(node) {
+        return this.container.has(node);
+      }
+    }
+
+    const myDOMstore = new DOMstore();
+
+    myDOMstore.set(nodeA,'This is nodeA');
+    myDOMstore.set(nodeB,'This is nodeB');
+    console.log("MyStore after set nodeA and nodeB: ",myDOMstore);
+    console.log("GET nodeA: ",myDOMstore.get(nodeA));
+    console.log("GET nodeB: ",myDOMstore.get(nodeB));
+    console.log("HAS nodeA: ",myDOMstore.has(nodeA));
+    console.log("HAS nodeB: ",myDOMstore.has(nodeB));    
+
+    class DOMstore2 {
+      constructor() {
+        this.storeId = Symbol();
+      }
+      set(node,value) {
+        node[this.storeId] = value;
+      }
+      get(node) {
+        return node[this.storeId];
+      }
+      has(node) {
+        return node[this.storeId] !== undefined;
+      }
+    }
+
+    const myDOMstore2 = new DOMstore2();
+
+    myDOMstore2.set(nodeA,'This is nodeA');
+    myDOMstore2.set(nodeB,'This is nodeB');
+    console.log("MyStore2 after set nodeA and nodeB: ",myDOMstore2);
+    console.log("GET nodeA: ",myDOMstore2.get(nodeA));
+    console.log("GET nodeB: ",myDOMstore2.get(nodeB));
+    console.log("HAS nodeA: ",myDOMstore2.has(nodeA));
+    console.log("HAS nodeB: ",myDOMstore2.has(nodeB));      
+
+  </script>
+</body>
+</html>
