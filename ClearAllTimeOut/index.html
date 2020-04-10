@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear All Time Out</title>
+</head>
+<body>
+  <script>
+    let allTimeoutIds = [];
+    let originalTimeout = window.setTimeout;
+    window.setTimeout = function(callback, time) {
+      const id = originalTimeout(callback,time);
+      allTimeoutIds.push(id);
+    }
+
+    function clearAll(arr) {
+      const a = [...arr];
+      while(a.length) {
+        clearTimeout(a.pop());
+      }
+    }
+    
+    setTimeout(()=>{
+      console.log('This is timer one');
+    },3000);
+
+    setTimeout(()=>{
+      console.log('This is timer two');
+    },5000);
+
+    setTimeout(()=>{
+      console.log('This is timer Three');
+    },5000);    
+
+    clearAll(allTimeoutIds);
+    console.log(allTimeoutIds);
+
+  </script>
+</body>
+</html>
