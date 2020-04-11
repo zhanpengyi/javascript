@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const nested = [1,[1,2,[1,2,3],[2]],3,4];
+
+    const flatArray = (arr) => {
+      let result = [];
+      for(let item of arr) {
+        if(Array.isArray(item)) {
+          result.push(...flatArray(item));
+        }
+        else {
+          result.push(item);
+        }
+      }
+      return result;
+    }
+
+    const flattern2 = (arr) => {
+      let queue = [...arr];
+      let result = [];
+      while(queue.length !== 0) {
+        let current = queue.shift();
+        if (Array.isArray(current)){
+          queue.unshift(...current);
+        }
+        else {
+          result.push(current);
+        }
+      }
+      return result;
+    }
+
+
+    const myFlat = flatArray(nested);
+
+    const myFlat2 = flattern2(nested);
+
+    console.log("This is flattern: ",myFlat);
+
+    console.log("This is flattern2: ",myFlat2);
+
+
+  </script>
+</body>
+</html>
