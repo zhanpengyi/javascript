@@ -3,9 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Event Emitter</title>
 </head>
 <body>
-  
+  <pre>
+    write an emitter class
+    emitter = new Emitter();
+
+    1. Support subscribing to events
+    sub = emitter.subscribe('event_name',callbck);
+    sub2 = emitter.subscribe('event_nme',callback2);
+
+    2. Support emitting events
+    emitter.emit('event_name',foo,bar);
+
+    3. Support unsubscribing existing subscriptions by release them
+    sub.release();
+  </pre>  
+  <script>
+    class EventEmitter {
+      constructor() {
+        this.event = {};
+      }
+      subscribe = (name, cb) => {
+        this.event[name] = cb;
+        return {
+          release: () => {
+            delete this.event[name];
+          }
+        }
+      }
+      emit = (name,...args) => {
+        this.event[name](args);
+      }
+    }
+
+    const myEventEmitter = new EventEmitter();
+
+    const echo = function() {
+      console.log(arguments);
+    }
+
+    const echo2 = function() {
+      throw Error('This is the error');
+      const text = Array.prototype.join.call(arguments,'-',"+");
+      console.dir(text);
+    }    
+
+    myEventEmitter.subscribe('event1',echo);
+    myEventEmitter.subscribe('event1',echo2);
+    myEventEmitter.emit('event1','yzp',1);
+
+  </script>
 </body>
 </html>
