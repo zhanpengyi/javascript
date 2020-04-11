@@ -32,30 +32,16 @@
   <div><a href="/">Back to Home</a></div>
   <script>
 
-    const animateRight = (e,duration,length) => {
-      let start = Date.now();
-      let timer = setInterval(()=>{
-        let now = Date.now();
-        if (now - start > duration) {
-          clearInterval(timer);
-          return;
-        }
-        let progress = (now - start)/duration;
-        if (progress > 1) progress = 1;       
-        e.style.transform = "translateX(" + progress*length + "px)";
-      },20);  // 1000ms / 10 = 100; 100FPS
-    }
-
-    const animate2 = (element, duration, length) => {
+    const animateRight = function(e,duration,length) {
       let start = performance.now();
-      requestAnimationFrame(function draw(time){
-        let progress = (time - start)/duration;
+      requestAnimationFrame(draw = (time) => {
+        let progress = (time - start) / duration;
         if (progress > 1) progress = 1;
-        element.style.transform = "translateX(" + progress*length + "px)";
-        if (time - start < duration) {
+        e.style.transform = "translateX(" + progress * length + "px)";
+        if (time -start < duration) {
           requestAnimationFrame(draw);
         }
-      })     
+      })
     }
 
     const t = document.getElementById('target');
