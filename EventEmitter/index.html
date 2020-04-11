@@ -45,13 +45,17 @@
     }
 
     const echo2 = function() {
-      throw Error('This is the error');
+      //throw Error('This is the error');
       const text = Array.prototype.join.call(arguments,'-',"+");
       console.dir(text);
     }    
 
     myEventEmitter.subscribe('event1',echo);
     myEventEmitter.subscribe('event1',echo2);
+    myEventEmitter.subscribe('event2',echo2);
+
+    console.log(myEventEmitter);
+
     myEventEmitter.emit('event1','yzp',1);
 
   </script>

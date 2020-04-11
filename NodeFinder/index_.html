@@ -50,28 +50,31 @@
     const nodeA = document.getElementById('nodeA');
     const nodeB = document.getElementById('nodeB');
 
-    const findPath = (root,node) => {
+    function getPath(root,node) {
       const path = [];
-      while(root !== node) {
+      while(node !== root) {
         const parent = node.parentElement;
         const index = Array.prototype.slice.call(parent.children).indexOf(node);
         path.push(index);
         node = parent;
-      } 
-      return path; 
+      }
+      return path;
     }
 
-    const findNode = (root,path) => {
+    function getNodeFromPath(root,path) {
       while(path.length) {
-        const index = path.pop();
-        root = Array.prototype.slice.call(root.children)[index]; 
-      }  
+        let index = path.pop();
+        root = root.children[index];
+      }
       return root;
     }
 
-    const myPath = findPath(rootA,nodeA);
-    const myNode = findNode(rootB,myPath);
-    console.log(myNode === nodeB);
+    const myPath = getPath(rootA,nodeA)
+    console.log(myPath);
+
+    const myNode = getNodeFromPath(rootB,myPath);
+    console.log(myNode);
+
 
   </script>      
 </body>
