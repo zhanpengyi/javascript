@@ -17,20 +17,22 @@
     const nodeA = nodes[0];
     const nodeB = nodes[1];
 
-
+    // use map. take the node element as the key to save value in the map container.
+    // use Symbol to create a unique id. Set the node object a new property use that id as proerty name
     class DOMstore {
       constructor() {
-        this.store = new Map();
+        this.container = new Map();
       }
-      set = (node,value) => {
-        this.store.set(node,value);  
+      set(node,value) {
+        this.container.set(node,value);
       }
-      get = (node) => {
-        return this.store.get(node);  
+      get(node) {
+        if (this.container.has(node)) return this.container.get(node);
+        else return null;
       }
-      has = (node) => {
-        return this.store.has(node);
-      } 
+      has(node) {
+        return this.container.has(node);
+      }
     }
 
     const myDOMstore = new DOMstore();
@@ -45,22 +47,22 @@
 
     class DOMstore2 {
       constructor() {
-        this.valueId = Symbol();
+        this.storeId = Symbol();
       }
-      set = (node,value) => {
-        node[this.valueId] = value;
+      set(node,value) {
+        node[this.storeId] = value;
       }
-      get = (node) => {
-        return node[this.valueId];
+      get(node) {
+        return node[this.storeId];
       }
-      has = (node) => {
-        return Object.getOwnPropertySymbols(node).indexOf(this.valueId) !== -1;
+      has(node) {
+        return node[this.storeId] !== undefined;
       }
     }
 
     const myDOMstore2 = new DOMstore2();
 
-    myDOMstore2.set(nodeA,undefined);
+    myDOMstore2.set(nodeA,'This is nodeA');
     myDOMstore2.set(nodeB,'This is nodeB');
     console.log("MyStore2 after set nodeA and nodeB: ",myDOMstore2);
     console.log("GET nodeA: ",myDOMstore2.get(nodeA));
