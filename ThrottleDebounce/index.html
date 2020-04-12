@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Throttle and Debounce</title>
+  <style>
+    body {
+      display: block;
+      height: 2000px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // throttle when we excute a function then we wont be able to reexcute it until we wait a duration time.
+    const throttle = (callback, duration = 300) => {
+      let start = 0;
+      return (args) => {
+        let now = Date.now();
+        if (now - start > duration) {
+          callback.apply(this,args);
+          start = now;
+        }
+      }
+    } 
+
+    const debounce = (callback, duration = 300) => {
+      let timer = null;
+      return (args) => {
+        clearTimeout(timer);
+        timer = setTimeout(()=>{
+          callback.apply(this,args);
+        },duration);
+      }
+    }
+
+    const combine = (callback, duration = 300) => {
+      let start = 0, timer = null;
+      return (args) => {
+        clearTimeout(timer);
+        let now = Date.now();
+        if (now - start > duration) {
+          callback.apply(this,args);
+          start = now;
+        }
+        else {
+          timer = setTimeout(()=>{
+            callback.apply(this,args);
+          },duration);
+        }
+      }
+    }
+
+    // window.onscroll = throttle((x)=>{
+    //   console.log(this);
+    //   console.log(this.scrollY);
+    // },3000);
+
+    window.onscroll = combine((x)=>{
+      console.log(this);
+      console.log(this.scrollY);
+    },3000);    
+
+  </script>
+</body>
+</html>

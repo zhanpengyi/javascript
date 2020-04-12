@@ -8,6 +8,7 @@
 <body>
   <div>
     <a href="https://obscurejavascript.tumblr.com/post/183031058225/how-to-clear-all-timeouts-in-javascript">Reference</a>
+    <div id="test">Click Me</div>
   </div>
   
   <script>
@@ -18,6 +19,7 @@
     window.setTimeout = (callback,duration) => {
       let id = newTimer(callback,duration);
       allTimers.push(id);
+      return id;
     }
 
     // clear all timer
@@ -27,6 +29,8 @@
       })
     } 
     
+    const t = document.getElementById('test');
+
     setTimeout(()=>{
       console.log('This is timer one');
     },3000);
@@ -37,7 +41,14 @@
 
     setTimeout(()=>{
       console.log('This is timer Three');
-    },5000);    
+    },5000); 
+
+    t.onclick = () => {
+      console.log('t is clicked');
+      setTimeout(()=> {
+        console.log('this is timer four');
+      },3000)
+    }   
 
     clearAll(allTimers);
 
