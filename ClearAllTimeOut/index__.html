@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear All Time Out</title>
+</head>
+<body>
+  <div>
+    <a href="https://obscurejavascript.tumblr.com/post/183031058225/how-to-clear-all-timeouts-in-javascript">Reference</a>
+    <div id="test">Click Me</div>
+  </div>
+  
+  <script>
+    let allTimers = [];
+    let newTimer = window.setTimeout;
+
+    // overwrite setTimeout
+    window.setTimeout = (callback,duration) => {
+      let id = newTimer(callback,duration);
+      allTimers.push(id);
+      return id;
+    }
+
+    // clear all timer
+    const clearAll = (allTimers) => {
+      allTimers.forEach(x => {
+        clearTimeout(x);
+      })
+    } 
+    
+    const t = document.getElementById('test');
+
+    setTimeout(()=>{
+      console.log('This is timer one');
+    },3000);
+
+    setTimeout(()=>{
+      console.log('This is timer two');
+    },5000);
+
+    setTimeout(()=>{
+      console.log('This is timer Three');
+    },5000); 
+
+    t.onclick = () => {
+      console.log('t is clicked');
+      setTimeout(()=> {
+        console.log('this is timer four');
+      },3000)
+    }   
+
+    clearAll(allTimers);
+
+  </script>
+</body>
+</html>
