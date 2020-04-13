@@ -52,22 +52,25 @@
 
     const findPath = (root,node) => {
       const path = [];
-      while(root !== node) {
-        const parent = node.parentElement;
-        const index = Array.prototype.slice.call(parent.children).indexOf(node);
+      let n = node;
+      while(n !== root) {
+        const parent = n.parentElement;
+        const index = Array.prototype.slice.call(parent.children).indexOf(n);
         path.push(index);
-        node = parent;
-      } 
-      return path; 
+        n = parent;
+      }
+      return path
     }
 
     const findNode = (root,path) => {
-      while(path.length) {
-        const index = path.pop();
-        root = Array.prototype.slice.call(root.children)[index]; 
-      }  
-      return root;
+      let [r,p] = [root,path];
+      while(p.length > 0) {
+        r = Array.prototype.slice.call(r.children)[p.pop()];
+      }
+      return r;
     }
+
+
 
     const myPath = findPath(rootA,nodeA);
     const myNode = findNode(rootB,myPath);
