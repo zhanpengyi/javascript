@@ -24,49 +24,47 @@
       {k:'type', v:'tv'}
     ];
 
-    function excludeItems(items,excludes) {
-      let result = [...items];
-      excludes.forEach(pair => {
-        result = result.filter(item => {
-          return item[pair.k] !== pair.v
+    const excludeItems = (items,excludes) => {
+      let ans = [...items];
+      excludes.forEach(e => {
+        ans = ans.filter(item => {
+          return item[e.k] !== e.v;
         })
       })
-      return result;
+      return ans;
     }
 
-    // 
-    function mapExcludes(arr) {
-      let map = new Map();
-      for(let e of excludes) {
-        if(!map.has(e.k)) map.set(e.k,[e.v]);
-        else {
-          let temp = map.get(e.k);
+    const mapExcludes = (excludes) => {
+      let ans = new Map();
+      excludes.forEach(e => {
+        if (ans.has(e.k)) {
+          const temp = ans.get(e.k);
           temp.push(e.v);
-          map.set(e.k,temp);
+          ans.set(e.k,temp);
         }
-      }
-      return map;
+        else {
+          ans.set(e.k,[e.v]);
+        }
+      })
+      return ans;
     }
 
-    const mapedExcludes = mapExcludes(excludes);
-
-    console.log(mapedExcludes);
-    
-    function excludeItems2(items,mapedExcludes) {
-      let result = [];
-      result = items.filter(item => {
+    const excludeItems2 = (items,mapedExcludes) => {
+      let ans = [...items];
+      ans = ans.filter(item => {
         let include = true;
         for(let [k,v] of mapedExcludes) {
-          if (v.indexOf(item[k]) !== -1) {
+          if (v.indexOf(item[k])!==-1) {
             include = false;
             break;
-          } 
+          }
         }
-        return include;        
+        return include;
       })
-      return result;
-    } 
-
+      return ans;
+    }
+    
+    const mapedExcludes = mapExcludes(excludes);
     const myExcludes = excludeItems(items,excludes);
     const myExcludes2 = excludeItems2(items,mapedExcludes);
     console.log("This is the original: ",myExcludes);

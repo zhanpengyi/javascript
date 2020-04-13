@@ -38,7 +38,6 @@
         return {
           release: () => {
             let index = this.events[name].indexOf(cb);
-            console.log(index);
             this.events[name].splice(index,1);
             if (this.events[name].length === 0) {
               delete this.events[name];

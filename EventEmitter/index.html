@@ -22,6 +22,7 @@
     
   </pre>  
   <script>
+    'use strict';
     class EventEmitter {
       constructor() {
         this.events = new Map();
@@ -52,26 +53,31 @@
       }
     }
 
-    const cb1 = (x) => {
-      console.log('this is cb1: ',x);
+    const obj = {
+      name: 'Sam Yi',
+      cb1: function() {
+        console.log("This is cb1: ",this.name)
+      },
+      cb2: function() {
+        console.log("This is cb2: ",this.name)
+      }      
     }
-
-    const cb2 = (x) => {
-      console.log('this is cb2: ',x);
+    
+    const cb = () => {
+      console.log("This is cb3");
     }
 
     const emitter = new EventEmitter();
 
-    const sub1 = emitter.subscribe('name',cb1);
-    const sub2 = emitter.subscribe('name',cb2);
-    const sub3 = emitter.subscribe('name1',cb2);
+    const sub1 = emitter.subscribe('name',obj.cb1.bind(obj));
+    const sub2 = emitter.subscribe('name',obj.cb2);
+    const sub4 = emitter.subscribe('name',cb);
+    const sub3 = emitter.subscribe('name1',obj.cb2);
 
-    sub1.release();
+    //sub1.release();
     //sub2.release();
 
-    emitter.emit('name','sam');
-
-    console.log(emitter);
+    emitter.emit('name','sam','Yi');
 
   </script>
 </body>
