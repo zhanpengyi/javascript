@@ -24,40 +24,46 @@
   <script>
     class EventEmitter {
       constructor() {
-        this.events = new Map();
+        this.events = {};
       }
       subscribe = (name, cb) => {
         if(name === undefined) throw new Error('Please add a event name');
         if(cb === undefined || typeof cb !== 'function') throw new Error('Please add a event callback');
-        if(this.events.has(name)) {
-          this.events.get(name).add(cb);
+        if (this.events[name]) {
+          this.events[name].push(cb);
         }
         else {
-          let newEvent = new Set();
-          newEvent.add(cb);
-          this.events.set(name,newEvent);
+          this.events[name] = [cb];
         }
         return {
           release: () => {
-            delete this.events.get(name).delete(cb);
-            if (this.events.get(name).size === 0) delete this.events[name];
+            let index = this.events[name].indexOf(cb);
+            console.log(index);
+            this.events[name].splice(index,1);
+            if (this.events[name].length === 0) {
+              delete this.events[name];
+            }
           }
         }
       }
       emit = (name,...args) => {
-        const t = this.events.get(name);
-        for(let fn of t) {
-          fn.apply(this,args);
-        }
+        this.events[name].forEach(fn=>{
+          try{
+            fn.apply(this,args);
+          }catch(err) {
+            console.log(err);
+          }
+        });
       }
     }
 
-    const cb1 = (x) => {
-      console.log('this is cb1: ',x);
+    const cb1 = (x,y,z) => {
+      //throw new Error('this is throw errors');
+      console.log('this is cb1: ',x+y,z);
     }
 
-    const cb2 = (x) => {
-      console.log('this is cb2: ',x);
+    const cb2 = (x,y,z) => {
+      console.log('this is cb2: ',x+y+z);
     }
 
     const emitter = new EventEmitter();
@@ -65,11 +71,12 @@
     const sub1 = emitter.subscribe('name',cb1);
     const sub2 = emitter.subscribe('name',cb2);
     const sub3 = emitter.subscribe('name1',cb2);
+    //const sub4 = emitter.subscribe('name3','test');
 
-    sub1.release();
+    //sub1.release();
     //sub2.release();
 
-    emitter.emit('name','sam');
+    emitter.emit('name','sam','yi','zhanpeng');
 
     console.log(emitter);
 
