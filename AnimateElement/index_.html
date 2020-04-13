@@ -30,23 +30,15 @@
   <br/>
   <div><a href="https://javascript.info/js-animation">Reference</a></div>
   <div><a href="/">Back to Home</a></div>
-  <pre>
-    requestAnimationFrame
-    tells the browser we wish to perform an animation and request browser to run a function to update an animation right before next repaint.
-    The function is passed in one single parameter. The time when callbacks got queued by requestAnimationFrame.
-
-    performance.now()
-    return a DOM high resolution time stamp.
-
-
-  </pre>  
   <script>
+
     const animateRight = function(e,duration,length) {
-      let start =  performance.now();
-      requestAnimationFrame(function draw(time) {
-        const percentage = (time - start) / duration;
-        e.style.transform = "translateX(" + percentage*length + "px)";
-        if (time - start <= duration) {
+      let start = performance.now();
+      requestAnimationFrame(draw = (time) => {
+        let progress = (time - start) / duration;
+        if (progress > 1) progress = 1;
+        e.style.transform = "translateX(" + progress * length + "px)";
+        if (time -start < duration) {
           requestAnimationFrame(draw);
         }
       })
@@ -58,7 +50,11 @@
 
     btn.addEventListener('click',function(){
       animateRight(t,3000,300);
-    });  
+    });
+
+    btn2.addEventListener('click',function(){
+      animate2(t,3000,300);
+    });    
 
   </script>
 </body>
