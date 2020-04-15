@@ -54,7 +54,7 @@
         return node[this.valueId];
       }
       has = (node) => {
-        return Object.getOwnPropertySymbols(node).indexOf(this.valueId) !== -1;
+        return node[this.valueId] !== undefined;
       }
     }
 
