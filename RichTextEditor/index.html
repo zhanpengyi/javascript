@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rich Text Editor</title>
+</head>
+<body>
+
+  <div id="target"></div>
+
+  <script>
+    const t = document.getElementById('target');
+    const s = "Hello, World";
+    const indices = [
+      [0,2,'i'],
+      [4,9,'b'],
+      [7,11,'u']
+    ];
+
+    const mapIndices = (indices) => {
+      const map = new Map();
+      for(let i of indices) {
+        map.set(i[0],i[2]);
+        map.set(i[1],i[2]);
+      }
+      return map;
+    }
+
+    const mapedIndices = mapIndices(indices);
+
+    console.log(mapedIndices);
+
+    const createString = (s,map) => {
+      let ans = [];
+      let stack = [];
+      for(let i = 0; i < s.length; i++) {
+        if (!map.has(i)) {
+          ans.push(s[i]);
+        }
+        else {
+          if (stack.length === 0) {
+            ans.push("<"+map.get(i)+">");
+            stack.push(map.get(i));
+          }
+          else {
+            const current = stack.pop();
+            if (current === map.get(i)) {
+              ans.push("</"+current+">");
+              if (stack.length !== 0) {
+                ans.push("</"+stack[stack.length-1]+">");
+                ans.push("<"+stack[stack.length-1]+">");
+              }
+            }
+            else {
+              ans.push("</"+current+">");
+              ans.push("<"+map.get(i)+">");
+              ans.push("<"+current+">");
+              stack.push(map.get(i));
+              stack.push(current);
+            }
+          }
+          ans.push(s[i]);
+        }
+      }
+      console.log(ans.join(''));
+    }
+
+    createString(s,mapedIndices);
+
+  </script>
+</body>
+</html>

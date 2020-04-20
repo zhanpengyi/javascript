@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text In Range</title>
+</head>
+<body>
+  <header><h1>This is the header title</h1></header>
+  <main id="lca">
+    <h2 id="nodeA">This is the main title and nodeA</h2>
+    <!-- here are some comments -->
+    <div class="content">
+      <p>This is p1</p>
+      <p>This is p2</p>
+      <img src="./" alt="image" />
+      <p id="nodeB">This is p3 and nodeB</p>
+    </div>
+  </main>
+  <footer>
+    <p>This is footer</p>
+  </footer>
+</body>
+<script>
+    const nodeA = document.getElementById('nodeA');
+    const nodeB = document.getElementById('nodeB');
+    const lca = document.getElementById('lca');
+
+    const textInRange = (nodeA,nodeB) => {
+      
+      const lists = [];
+      let between = false;
+
+      const domTraverse = (root) => {
+        if (between) lists.push(root);
+        if (root === nodeA) between = true;
+        if (root === nodeB) between = false;
+        root = root.firstChild;
+        while(root) {
+          domTraverse(root);
+          root = root.nextSibling;
+        }
+      }
+
+      const parents = (node) => {
+        const nodes = [];
+        while(node = node.parentNode) {
+          nodes.unshift(node);
+        }
+        return nodes;
+      }
+
+      const findLCA = (nodeA,nodeB) => {
+        const parents1 = parents(nodeA);
+        const parents2 = parents(nodeB);
+        const len = Math.max(parents1.length,parents2.length);
+        for (let i = 0; i < len; i++) {
+          if (parents1[i] !== parents2[i]) {
+            return parents1[i-1];
+          }
+        }
+      }
+
+      const lca = findLCA(nodeA,nodeB);
+
+      domTraverse(lca);
+
+      result = lists.filter(list => {
+        if (list.nodeType === 3) {
+          return true;
+        }
+        return false;
+      });
+      return result;
+    }
+
+    const test = textInRange(nodeA,nodeB);
+    const collect = test.map(i => {
+      return i.data;
+    })
+    console.log(collect.join(''));
+
+
+
+
+
+
+
+
+    // const nodeIterator = document.createNodeIterator(
+    //   lca,
+    //   NodeFilter.SHOW_ALL
+    // );
+
+    // let currentNode;
+    // while(currentNode = nodeIterator.nextNode()) {
+    //   //console.log(currentNode);
+    //   if (currentNode.nodeType === 3) {
+    //     console.dir(currentNode.data);
+    //   }
+    // }
+
+    // const domTraverse = (node) => {
+    //   console.dir(node);
+    //   node = node.firstChild;
+    //   while(node) {
+    //     domTraverse(node);
+    //     node = node.nextSibling;
+    //   }
+    // }
+    // domTraverse(document.body);
+
+
+    // var nodeIterator = document.createNodeIterator(document.body);
+    // var currentNode;
+    // let between = false, ans = [];
+    // while (currentNode = nodeIterator.nextNode()) {
+    //   if (between) {
+    //     if(currentNode.nodeType === 3) {
+    //       ans.push(currentNode);
+    //     }
+    //   }      
+    //   if (currentNode === nodeA) {
+    //     between = true;
+    //   }
+    //   if (currentNode === nodeB) {
+    //     between = false;
+    //   }
+    // }
+
+    // console.log(ans);
+
+
+</script>
+</html>
