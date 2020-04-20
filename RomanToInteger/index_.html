@@ -42,40 +42,22 @@
         'D': 500,
         'M': 1000
       }
-      let ans = 0;
-      let i = s.length-1;
-      while(i>=0){
-        if(map[s[i-1]] >= map[s[i]] || i === 0) {
-          ans += map[s[i]];
-          i--;
+      let current = s.length - 1, ans = 0;
+      while(current >= 0) {
+        if (map[s[current]] <= map[s[current-1]] || current===0) {
+          ans += map[s[current]];
+          current--;
         }
         else {
-          ans += map[s[i]] - map[s[i-1]];
-          i-=2;
+          ans += map[s[current]] - map[s[current-1]];
+          current -= 2;
         }
       }
       return ans;
     }
 
-    const IntToRoman = (num) => {
-      const values = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
-      const symbols = ["M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"];
-      const ans = [];
-      let current = num;
-      for(let i = 0; i < values.length && current >=0; i++) {
-        while(values[i]<=current) {
-          current -= values[i];
-          ans.push(symbols[i]);
-        }
-      }
-      return ans.join('');
-    }
-
     const test1 = 'MCMXCIV';
     console.log(romanToInt(test1));
-
-    const num1 = 1994;
-    console.log(IntToRoman(num1));
 
   </script>
 </body>
