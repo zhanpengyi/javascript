@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Emitter</title>
+</head>
+<body>
+  <pre>
+    write an emitter class
+    emitter = new Emitter();
+
+    1. Support subscribing to events
+    sub = emitter.subscribe('event_name',callbck);
+    sub2 = emitter.subscribe('event_nme',callback2);
+
+    2. Support emitting events
+    emitter.emit('event_name',foo,bar);
+
+    3. Support unsubscribing existing subscriptions by release them
+    sub.release();
+    
+  </pre>  
+  <script>
+    'use strict';
+    class EventEmitter {
+      constructor() {
+        this.events = new Map();
+      }
+      subscribe = (name, cb) => {
+        if(name === undefined) throw new Error('Please add a event name');
+        if(cb === undefined || typeof cb !== 'function') throw new Error('Please add a event callback');
+        if(this.events.has(name)) {
+          this.events.get(name).add(cb);
+        }
+        else {
+          let newEvent = new Set();
+          newEvent.add(cb);
+          this.events.set(name,newEvent);
+        }
+        return {
+          release: () => {
+            this.events.get(name).delete(cb);
+            if (this.events.get(name).size === 0) delete this.events[name];
+          }
+        }
+      }
+      emit = (name,...args) => {
+        const t = this.events.get(name);
+        for(let fn of t) {
+          fn.apply(this,args);
+        }
+      }
+    }
+
+    const obj = {
+      name: 'Sam Yi',
+      cb1: function() {
+        console.log("This is cb1: ",this.name)
+      },
+      cb2: function() {
+        console.log("This is cb2: ",this.name)
+      }      
+    }
+    
+    const cb = () => {
+      console.log("This is cb3");
+    }
+
+    const emitter = new EventEmitter();
+
+    const sub1 = emitter.subscribe('name',obj.cb1.bind(obj));
+    const sub2 = emitter.subscribe('name',obj.cb2);
+    const sub4 = emitter.subscribe('name',cb);
+    const sub3 = emitter.subscribe('name1',obj.cb2);
+
+    //sub1.release();
+    //sub2.release();
+
+    emitter.emit('name','sam','Yi');
+
+  </script>
+</body>
+</html>

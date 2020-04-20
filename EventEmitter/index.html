@@ -23,61 +23,56 @@
   </pre>  
   <script>
     'use strict';
-    class EventEmitter {
+    class Emitter {
       constructor() {
         this.events = new Map();
+        // key will be the event name
+        // value will be a set of callback functions
       }
-      subscribe = (name, cb) => {
-        if(name === undefined) throw new Error('Please add a event name');
-        if(cb === undefined || typeof cb !== 'function') throw new Error('Please add a event callback');
-        if(this.events.has(name)) {
-          this.events.get(name).add(cb);
+      subscribe(name,callback) {
+        if (!this.events.has(name)) {
+          const temp = new Set();
+          temp.add(callback);
+          this.events.set(name,temp);
         }
         else {
-          let newEvent = new Set();
-          newEvent.add(cb);
-          this.events.set(name,newEvent);
+          const temp = this.events.get(name);
+          temp.add(callback);
+          this.events.set(name,temp);
         }
         return {
           release: () => {
-            delete this.events.get(name).delete(cb);
-            if (this.events.get(name).size === 0) delete this.events[name];
+            this.events.get(name).delete(callback);
           }
         }
       }
-      emit = (name,...args) => {
-        const t = this.events.get(name);
-        for(let fn of t) {
+      emitter(name,...args) {
+        const fns = this.events.get(name);
+        fns.forEach(fn => {
           fn.apply(this,args);
-        }
+        })
       }
     }
 
-    const obj = {
-      name: 'Sam Yi',
-      cb1: function() {
-        console.log("This is cb1: ",this.name)
-      },
-      cb2: function() {
-        console.log("This is cb2: ",this.name)
-      }      
-    }
-    
-    const cb = () => {
-      console.log("This is cb3");
+    const myEmitter = new Emitter();
+
+    const callback1 = (x,y) => {
+      console.log('This is callback1: ',x,y);
     }
 
-    const emitter = new EventEmitter();
+    const callback2 = (x,y) => {
+      console.log('This is callback2: ',x,y);
+    }  
 
-    const sub1 = emitter.subscribe('name',obj.cb1.bind(obj));
-    const sub2 = emitter.subscribe('name',obj.cb2);
-    const sub4 = emitter.subscribe('name',cb);
-    const sub3 = emitter.subscribe('name1',obj.cb2);
+    const sub1 = myEmitter.subscribe('event1',callback1);
+    const sub2 = myEmitter.subscribe('event1',callback2);
 
-    //sub1.release();
-    //sub2.release();
+    sub2.release();
+    sub1.release();
 
-    emitter.emit('name','sam','Yi');
+    myEmitter.emitter('event1','sam','yi');
+
+
 
   </script>
 </body>
