@@ -6,8 +6,8 @@
   <title>Animate an element to the right</title>
   <style>
     .wrapper { display: block; width: 540px; height: 240px; border: 1px solid #ccc; padding: 20px; }
-    #target { display: block; width: 200px; height: 200px; background-color:burlywood; position:relative; }
-    #target:hover { transform: translateX(300px); transition: transform 3s linear; }
+    #target { left: 100px; /* display: block; */ width: 200px; height: 200px; background-color:burlywood; position:relative; }
+    /* #target:hover { transform: translateX(300px); transition: transform 3s linear; } */
   </style>
 </head>
 <body>
@@ -20,7 +20,11 @@
     })
   </code></pre>  
   <div class="wrapper">
-    <div id="target"></div>
+    <table>
+      <tr>
+        <td id="target"></td>
+      </td>
+    </table>
   </div>
   <br/>
   <div>
@@ -37,19 +41,56 @@
 
     performance.now()
     return a DOM high resolution time stamp.
-
-
   </pre>  
   <script>
+
+
+
     const animateRight = function(e,duration,length) {
       let start =  performance.now();
       requestAnimationFrame(function draw(time) {
-        const percentage = (time - start) / duration;
+        const timeFunction = (x) => {
+          if (x < 0.5) return x;
+          else return 1-x;
+        }        
+        const percentage = timeFunction((time - start) / duration);
         e.style.transform = "translateX(" + percentage*length + "px)";
         if (time - start <= duration) {
           requestAnimationFrame(draw);
         }
       })
+    }
+
+    const animateRight2 = (e,duration,length) => {
+      if(!window.requestAnimationFrame) {
+        const fps = 60;
+        const deltaT = 1000 / fps;
+        let start = Date.now();
+        const timer = setInterval(function() {
+          const now = Date.now();
+          const percentage = (now - start) / duration
+          left = length * percentage; 
+          e.style.left = left + "px";
+          if (percentage >= 1) {
+            clearInterval(timer);
+          }  
+          console.log(left);   
+        },deltaT);
+      }
+      else {
+        let start =  performance.now();
+        requestAnimationFrame(function draw(time) {
+          const timeFunction = (x) => {
+            if (x < 0.5) return x;
+            else return 1-x;
+          }        
+          const percentage = timeFunction((time - start) / duration);
+          e.style.transform = "translateX(" + percentage*length + "px)";
+          if (time - start <= duration) {
+            requestAnimationFrame(draw);
+          }
+        })        
+      }
     }
 
     const t = document.getElementById('target');
@@ -59,6 +100,10 @@
     btn.addEventListener('click',function(){
       animateRight(t,3000,300);
     });  
+
+    btn2.addEventListener('click',function(){
+      animateRight2(t,3000,300);
+    });      
 
   </script>
 </body>

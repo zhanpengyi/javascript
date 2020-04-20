@@ -35,13 +35,13 @@
 
     const myDOMstore = new DOMstore();
 
-    myDOMstore.set(nodeA,'This is nodeA');
-    myDOMstore.set(nodeB,'This is nodeB');
-    console.log("MyStore after set nodeA and nodeB: ",myDOMstore);
-    console.log("GET nodeA: ",myDOMstore.get(nodeA));
-    console.log("GET nodeB: ",myDOMstore.get(nodeB));
-    console.log("HAS nodeA: ",myDOMstore.has(nodeA));
-    console.log("HAS nodeB: ",myDOMstore.has(nodeB));    
+    // myDOMstore.set(nodeA,'This is nodeA');
+    // myDOMstore.set(nodeB,'This is nodeB');
+    // console.log("MyStore after set nodeA and nodeB: ",myDOMstore);
+    // console.log("GET nodeA: ",myDOMstore.get(nodeA));
+    // console.log("GET nodeB: ",myDOMstore.get(nodeB));
+    // console.log("HAS nodeA: ",myDOMstore.has(nodeA));
+    // console.log("HAS nodeB: ",myDOMstore.has(nodeB));    
 
     class DOMstore2 {
       constructor() {
@@ -54,19 +54,77 @@
         return node[this.valueId];
       }
       has = (node) => {
-        return node[this.valueId] !== undefined;
+        if (Object.getOwnPropertySymbols(node).indexOf(this.valueId) !== -1) {
+          return true;
+        }
+        else {
+          return false;
+        }
       }
     }
 
     const myDOMstore2 = new DOMstore2();
+    const myDOMstore3 = new DOMstore2();
 
     myDOMstore2.set(nodeA,undefined);
     myDOMstore2.set(nodeB,'This is nodeB');
+    myDOMstore3.set(nodeA,'this is store3 value');
     console.log("MyStore2 after set nodeA and nodeB: ",myDOMstore2);
+    console.dir(nodeA);
     console.log("GET nodeA: ",myDOMstore2.get(nodeA));
+    console.log("GET nodeA From store3: ",myDOMstore3.get(nodeA));
     console.log("GET nodeB: ",myDOMstore2.get(nodeB));
     console.log("HAS nodeA: ",myDOMstore2.has(nodeA));
-    console.log("HAS nodeB: ",myDOMstore2.has(nodeB));      
+    console.log("HAS nodeB: ",myDOMstore2.has(nodeB));   
+
+    // This O(n) due to a linear look up
+    class DOMstore3 {
+      constructor() {
+        this.nodes = [];
+        this.value = {};
+      }
+      set = (node,value) => {
+        if (this.nodes.indexOf(node) === -1) {
+          this.nodes.push(node);
+          const index = this.nodes.indexOf(node);
+          this.value[index] = value;
+        }
+        else {
+          const index = this.nodes.indexOf(node);
+          this.value[index] = value;
+        }
+      }
+      get = (node) => {
+        if (this.nodes.indexOf(node) === -1) {
+          throw new Error('Can not find the node in store');
+        }
+        else {
+          const index = this.nodes.indexOf(node);
+          return this.value[index];
+        }
+      }
+      delete = (node) => {
+        if (this.nodes.indexOf(node) === -1) {
+          throw new Error('Can not find the node in store');
+        }
+        else {
+          const index = this.nodes.indexOf(node);
+          for(let i = index; i < this.nodes.length; i++) {
+            this.value[i] = this.value[i+1];
+          }
+          this.value.delete(this.nodes.length-1);
+          this.nodes.splice(index,1);
+        }        
+      }
+      has = (node) => {
+        if (this.nodes.indexOf(node) === -1) {
+          return false;
+        }
+        else {
+          return true;
+        }
+      }
+    }   
 
   </script>
 </body>
